@@ -2,6 +2,7 @@ import MapboxGL from '@mapbox/react-native-mapbox-gl';
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import config from '../../config';
+import { connect } from 'react-redux';
 
 import {
   ShowMap,
@@ -20,16 +21,19 @@ import {
   QueryAtPoint,
   DriveTheLine
 } from '../components/index';
+import { bindActionCreators } from 'redux';
 
 import colors from '../styles/colors';
 import sheet from '../styles/sheet';
 import { IS_ANDROID } from '../utils/index';
 
+import * as actions from '../redux/actions';
+
 MapboxGL.setAccessToken(config.mapBoxKey);
 
 type Props = {};
 
-export default class HomeScreen extends Component<Props> {
+class HomeScreen extends Component<Props> {
   static navigationOptions = {
     header: null
   };
@@ -47,6 +51,13 @@ export default class HomeScreen extends Component<Props> {
         isFetchingAndroidPermission: false,
       });
     }
+
+    setTimeout(() => {
+      this.props.actions.dummyAction().then(res => {
+        console.log('res', res);
+      })
+      
+    }, 3000);
   }
 
   render() {
@@ -85,6 +96,16 @@ export default class HomeScreen extends Component<Props> {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  state
+});
+
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
 
 const styles = StyleSheet.create({
   container: {
